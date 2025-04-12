@@ -1,0 +1,26 @@
+{
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "region": "us-east-1",
+        "source_ami": "ami-071226ecf16aa7d96", 
+        "instance_type": "t2.micro",
+        "ssh_username": "ec2-user",
+        "ami_name": "nginx-custom-ami-{{timestamp}}",
+        "vpc_id": "vpc-02cfc2e73f3926c23",
+        "subnet_id": "subnet-0d436f6707cc5e3dd"
+
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": [
+          "sudo yum update -y",
+          "sudo yum install -y nginx",
+          "sudo systemctl enable nginx"
+        ]
+      }
+    ]
+  }
+  

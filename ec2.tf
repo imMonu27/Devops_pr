@@ -9,12 +9,22 @@ resource "aws_instance" "PRinstance" {
   key_name      = aws_key_pair.my_key.key_name
 
   
-   user_data = <<-EOF
-    #!/bin/bash
-    sudo yum update -y
-    sudo yum install -y nginx
-    sudo systemctl start nginx
-    sudo systemctl enable nginx
-  EOF
+    user_data = <<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get install -y docker.io
+
+              systemctl start docker
+              systemctl enable docker
+
+              mkdir /home/ubuntu/my-nginx
+              cd /home/ubuntu/my-nginx
+
+              docker pull devmohit27/dev_pr:v1
+              docker run -d -p 80:80 devmohit27/dev_pr:v1
+            EOF
+
+
+
 
 }

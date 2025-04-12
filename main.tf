@@ -1,12 +1,8 @@
 module "network" {
-  source               = "./modules/network"
-}
-
-//creating backend to migratte state file to aws s3 storage
-terraform {
-  backend "s3" {
-    bucket = "mohit-terraform-bucket-27"
-    key = "terraform/PR_1.2/terraform.tfstate"
-    region = "us-east-1"
-  }
+  source              = "./modules/network"
+  vpc_cidr            = var.vpc_cidr
+  public_subnet_cidr  = var.public_subnet_cidr
+  private_subnet_cidr = var.private_subnet_cidr
+  public_az           = var.public_az
+  private_az          = var.private_az
 }
