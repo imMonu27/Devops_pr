@@ -1,5 +1,5 @@
 resource "aws_security_group" "allow_ssh" {
-  vpc_id = aws_vpc.first_vpc.id
+  vpc_id = module.network.vpc_id
 
   ingress {
     from_port   = 22
