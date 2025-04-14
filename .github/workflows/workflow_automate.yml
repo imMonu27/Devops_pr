@@ -1,9 +1,9 @@
 name: terraform-file-run
 
 on: 
-  push:
-    branches:
-      - docker_initialization
+  # push:
+  #   branches:
+  #     - docker_initialization
   workflow_dispatch:
 
 jobs:
