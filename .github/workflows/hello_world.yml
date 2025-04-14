@@ -1,0 +1,14 @@
+name: hello-world
+
+on: 
+    push:
+        branches:
+            docker_initialization
+jobs:
+    hello-world:
+      runs-on: ubuntu-latest
+    
+      steps:
+            - name: run comman
+              run: echo "hello world" 
+       
