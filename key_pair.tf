@@ -13,5 +13,5 @@ resource "aws_key_pair" "my_key" {
 
 resource "local_file" "private_key" {
   content  = tls_private_key.my_key.private_key_pem
-  filename = "C:/Users/mohit/Downloads/my-terraform-key.pem"
+  filename = var.file_path
 }
