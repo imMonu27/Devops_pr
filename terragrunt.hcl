@@ -1,0 +1,21 @@
+terraform {
+  source = "./modules/network"
+}
+
+inputs = {
+  vpc_cidr           = "10.0.0.0/16"
+  public_subnet_cidr = "10.0.1.0/24"
+  private_subnet_cidr = "10.0.2.0/24"
+  public_az          = "us-east-1a"
+  private_az         = "us-east-1b"
+  ami_id             = "ami-084568db4383264d4"
+  instance_type      = "t2.micro"
+  file_path          = "C:/Users/mohit/Downloads/my-terraform-key.pem"
+  ingress_rules = {
+    "ssh" = {
+      port     = 22
+      protocol = "tcp"
+      cidr     = "0.0.0.0/0"
+    }
+  }
+}
