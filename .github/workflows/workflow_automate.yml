@@ -5,6 +5,20 @@ on:
   #   branches:
   #     - docker_initialization
   workflow_dispatch:
+    inputs: 
+      steps-to-run:
+        description: "select step to run "
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - init
+          - plan
+          - apply 
+          - destroy
+
+
 
 jobs:
   terraform:
@@ -28,15 +42,19 @@ jobs:
             chmod +x /usr/local/bin/terragrunt
 
       - name: Terragrunt Init
+        if: ${{github.event.inputs.steps-to-run == 'init' || github.event.inputs.steps-to-run == 'all'}}
         run: terragrunt init
 
       - name: Terragrunt Plan
+        if: ${{github.event.inputs.steps-to-run == 'plan' || github.event.inputs.steps-to-run == 'all'}}
         run: terragrunt plan
 
       - name: Terragrunt Apply 
+        if: ${{github.event.inputs.steps-to-run == 'apply' || github.event.inputs.steps-to-run == 'all'}}
         run: terragrunt apply -auto-approve
 
       - name: Terragrunt Destroy
+        if: ${{github.event.inputs.steps-to-run == 'destroy' || github.event.inputs.steps-to-run == 'all'}}
         run: terragrunt destroy -auto-approve
 
     env:
