@@ -1,10 +1,18 @@
 name: terraform-file-run
 
-on: 
-  # push:
-  #   branches:
-  #     - docker_initialization
+on:
   workflow_dispatch:
+    inputs:
+      step_to_run:
+        description: "Select step to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - init
+          - plan
+          - apply
 
 jobs:
   terraform:
@@ -17,18 +25,19 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with: 
-          terraform_version: 1.6.6  
-
-          # hello world
+        with:
+          terraform_version: 1.6.6
 
       - name: Terraform Init
+        if: ${{ github.event.inputs.step_to_run == 'init' || github.event.inputs.step_to_run == 'all' }}
         run: terraform init
 
       - name: Terraform Plan
+        if: ${{ github.event.inputs.step_to_run == 'plan' || github.event.inputs.step_to_run == 'all' }}
         run: terraform plan
 
-      - name: Terraform Apply 
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.step_to_run == 'apply' || github.event.inputs.step_to_run == 'all' }}
         run: terraform apply -auto-approve
 
     env:
