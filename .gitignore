@@ -14,8 +14,6 @@ crash.log
 
 # Ignore Terraform .terraform directory
 .terraform/
-.terragrunt-cache/
-
 
 # Ignore any IDE-specific files (Optional)
 .idea/
