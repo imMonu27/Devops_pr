@@ -13,6 +13,7 @@ on:
           - init
           - plan
           - apply
+          - destroy
 
 jobs:
   terraform:
@@ -27,18 +28,29 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
+      
+      - name: Install Terragrunt
+        run: |
+            wget -q https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+            chmod +x terragrunt_linux_amd64
+            sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+            terragrunt --version
 
-      - name: Terraform Init
+      - name: Terragrunt Init
         if: ${{ github.event.inputs.step_to_run == 'init' || github.event.inputs.step_to_run == 'all' }}
-        run: terraform init
+        run: terragrunt init
 
-      - name: Terraform Plan
+      - name: Terragrunt Plan
         if: ${{ github.event.inputs.step_to_run == 'plan' || github.event.inputs.step_to_run == 'all' }}
-        run: terraform plan
+        run: terragrunt plan
 
-      - name: Terraform Apply
+      - name: Terragrunt Apply
         if: ${{ github.event.inputs.step_to_run == 'apply' || github.event.inputs.step_to_run == 'all' }}
-        run: terraform apply -auto-approve
+        run: terragrunt apply -auto-approve
+      
+      - name: Terragrunt Destroy
+        if: ${{github.event.inputs.step_to_run == 'destroy' || github.event.inputs.step_to_run == 'all'}}
+        run: terragrunt destroy -auto-approve
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
