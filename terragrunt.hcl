@@ -12,10 +12,19 @@ inputs = {
   instance_type      = "t2.micro"
   file_path          = "C:/Users/mohit/Downloads/my-terraform-key.pem"
   ingress_rules = {
-    "ssh" = {
-      port     = 22
-      protocol = "tcp"
-      cidr     = "0.0.0.0/0"
-    }
+  ssh = {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
+  http = {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 }
