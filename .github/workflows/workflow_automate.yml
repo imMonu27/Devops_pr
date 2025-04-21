@@ -3,17 +3,37 @@ name: terraform-file-run
 on:
   workflow_dispatch:
     inputs:
-      step_to_run:
-        description: "Select step to run"
-        required: true
-        default: "all"
-        type: choice
-        options:
-          - all
-          - init
-          - plan
-          - apply
-          - destroy
+      Select_All:
+        description: "select all steps"
+        required: false
+        default: false
+        type: boolean
+      
+      Init:
+        description: "initializatioonn"
+        required: false
+        default: false
+        type: boolean
+      
+      Plan: 
+        description: "plan"
+        required: false
+        default: false
+        type: boolean
+      
+      Apply: 
+        description: "apply"
+        required: false
+        default: false
+        type: boolean
+    
+      Destroy:
+        description: "destroy"
+        required: false
+        default: false
+        type: boolean
+
+
 
 jobs:
   terraform:
@@ -29,27 +49,25 @@ jobs:
         with:
           terraform_version: 1.6.6
       
-      - name: Install Terragrunt
-        run: |
-            wget -q https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
-            chmod +x terragrunt_linux_amd64
-            sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
-            terragrunt --version
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v3
+        with:
+            terragrunt-version: 0.55.2
 
       - name: Terragrunt Init
-        if: ${{ github.event.inputs.step_to_run == 'init' || github.event.inputs.step_to_run == 'all' }}
+        if: ${{ github.event.inputs.Init == true || github.event.inputs.Select_All == true }}
         run: terragrunt init
 
       - name: Terragrunt Plan
-        if: ${{ github.event.inputs.step_to_run == 'plan' || github.event.inputs.step_to_run == 'all' }}
+        if: ${{ github.event.inputs.Plan == true || github.event.inputs.Select_All == true }}
         run: terragrunt plan
 
       - name: Terragrunt Apply
-        if: ${{ github.event.inputs.step_to_run == 'apply' || github.event.inputs.step_to_run == 'all' }}
+        if: ${{ github.event.inputs.Apply == true || github.event.inputs.Select_All == true }}
         run: terragrunt apply -auto-approve
       
       - name: Terragrunt Destroy
-        if: ${{github.event.inputs.step_to_run == 'destroy' || github.event.inputs.step_to_run == 'all'}}
+        if: ${{github.event.inputs.Destroy == true || github.event.inputs.Select_All == true }}
         run: terragrunt destroy -auto-approve
 
     env:
