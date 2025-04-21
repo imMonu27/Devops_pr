@@ -55,19 +55,19 @@ jobs:
             terragrunt-version: 0.55.2
 
       - name: Terragrunt Init
-        if: ${{ github.event.inputs.Init == true || github.event.inputs.Select_All == true }}
+        if: ${{ github.event.inputs.Init == 'true' || github.event.inputs.Select_All == 'true' }}
         run: terragrunt init
 
       - name: Terragrunt Plan
-        if: ${{ github.event.inputs.Plan == true || github.event.inputs.Select_All == true }}
+        if: ${{ github.event.inputs.Plan == 'true' || github.event.inputs.Select_All == 'true' }}
         run: terragrunt plan
 
       - name: Terragrunt Apply
-        if: ${{ github.event.inputs.Apply == true || github.event.inputs.Select_All == true }}
+        if: ${{ github.event.inputs.Apply == 'true' || github.event.inputs.Select_All == 'true' }}
         run: terragrunt apply -auto-approve
       
       - name: Terragrunt Destroy
-        if: ${{github.event.inputs.Destroy == true || github.event.inputs.Select_All == true }}
+        if: ${{github.event.inputs.Destroy == 'true' || github.event.inputs.Select_All == 'true' }}
         run: terragrunt destroy -auto-approve
 
     env:
