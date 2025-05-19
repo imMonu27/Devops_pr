@@ -1,10 +1,19 @@
 name: terraform-file-run
 
-on: 
-  # push:
-  #   branches:
-  #     - docker_initialization
+on:
   workflow_dispatch:
+    inputs:
+      step_to_run:
+        description: "Select step to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - init
+          - plan
+          - apply
+          - destroy
 
 jobs:
   terraform:
@@ -17,19 +26,31 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with: 
-          terraform_version: 1.6.6  
+        with:
+          terraform_version: 1.6.6
+      
+      - name: Install Terragrunt
+        run: |
+            wget -q https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+            chmod +x terragrunt_linux_amd64
+            sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+            terragrunt --version
 
-          # hello world
+      - name: Terragrunt Init
+        if: ${{ github.event.inputs.step_to_run == 'init' || github.event.inputs.step_to_run == 'all' }}
+        run: terragrunt init
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Terragrunt Plan
+        if: ${{ github.event.inputs.step_to_run == 'plan' || github.event.inputs.step_to_run == 'all' }}
+        run: terragrunt plan
 
-      - name: Terraform Plan
-        run: terraform plan
-
-      - name: Terraform Apply 
-        run: terraform apply -auto-approve
+      - name: Terragrunt Apply
+        if: ${{ github.event.inputs.step_to_run == 'apply' || github.event.inputs.step_to_run == 'all' }}
+        run: terragrunt apply -auto-approve
+      
+      - name: Terragrunt Destroy
+        if: ${{github.event.inputs.step_to_run == 'destroy' || github.event.inputs.step_to_run == 'all'}}
+        run: terragrunt destroy -auto-approve
 
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
