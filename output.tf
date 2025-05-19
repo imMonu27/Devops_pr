@@ -10,3 +10,7 @@ output "public_subnet_id" {
 output "private_subnet_id" {
   value = module.network.private_subnet_id
 }
+
+output "cluster_name" {
+  value = module.eks.cluster_name
+}

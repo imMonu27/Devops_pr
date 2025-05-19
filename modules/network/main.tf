@@ -24,6 +24,15 @@ resource "aws_subnet" "privatesubnet" {
   }
 }
 
+resource "aws_subnet" "privatesubnet2" {
+  vpc_id            = aws_vpc.first_vpc.id
+  cidr_block        = var.private_subnet_cidr2
+  availability_zone = var.private_az2
+  tags = {
+    Name = "PrivateSubnet2"
+  }
+}
+
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.first_vpc.id
 }
@@ -59,6 +68,11 @@ resource "aws_route_table" "publicRT" {
 resource "aws_route_table_association" "privateRTassociation" {
   route_table_id = aws_route_table.privateRT.id
   subnet_id      = aws_subnet.privatesubnet.id
+}
+
+resource "aws_route_table_association" "privateRTassociation2" {
+  route_table_id = aws_route_table.privateRT.id
+  subnet_id      = aws_subnet.privatesubnet2.id
 }
 
 resource "aws_route_table_association" "publicRTassociation" {
